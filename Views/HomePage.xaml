@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:CleanSnap.ViewModels"
+             xmlns:conv="clr-namespace:CleanSnap.Converters"
+             x:Class="CleanSnap.Views.HomePage"
+             x:DataType="vm:HomeViewModel"
+             Title="CleanSnap"
+             BackgroundColor="{AppThemeBinding Light=#F4F6F9, Dark=#121212}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <conv:BytesToReadableConverter x:Key="BytesToReadable" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="16" Padding="20">
+
+            <!-- Header Badge -->
+            <HorizontalStackLayout Spacing="8" HorizontalOptions="Center">
+                <Label Text="🧹 CleanSnap" FontSize="26" FontAttributes="Bold" TextColor="#1E88E5" />
+                <Border BackgroundColor="#E3F2FD" StrokeShape="RoundRectangle 8" Padding="6,2" VerticalOptions="Center">
+                    <Label Text="100% OFFLINE" FontSize="10" FontAttributes="Bold" TextColor="#1565C0" />
+                </Border>
+            </HorizontalStackLayout>
+
+            <!-- Storage Card -->
+            <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                    StrokeShape="RoundRectangle 16"
+                    StrokeThickness="0"
+                    Padding="20">
+                <VerticalStackLayout Spacing="12">
+                    <HorizontalStackLayout Spacing="8">
+                        <Label Text="💾" FontSize="20" />
+                        <Label Text="Storage Overview" FontSize="18" FontAttributes="Bold" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <!-- Storage Progress Bar -->
+                    <ProgressBar Progress="{Binding StorageProgress}"
+                                 ProgressColor="#1E88E5"
+                                 HeightRequest="12" />
+
+                    <Grid ColumnDefinitions="*,*">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="Free Space" FontSize="12" TextColor="Gray" />
+                            <Label Text="{Binding StorageFreeBytes, Converter={StaticResource BytesToReadable}}"
+                                   FontSize="16" FontAttributes="Bold" TextColor="#43A047" />
+                        </VerticalStackLayout>
+                        <VerticalStackLayout Grid.Column="1" HorizontalOptions="End">
+                            <Label Text="Total Space" FontSize="12" TextColor="Gray" HorizontalTextAlignment="End" />
+                            <Label Text="{Binding StorageTotalBytes, Converter={StaticResource BytesToReadable}}"
+                                   FontSize="16" FontAttributes="Bold" HorizontalTextAlignment="End" />
+                        </VerticalStackLayout>
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- 2 Stat Cards (Duplicates & Junk) -->
+            <Grid ColumnDefinitions="*,*" ColumnSpacing="12">
+                <!-- Duplicates Card -->
+                <Border Grid.Column="0"
+                        BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                        StrokeShape="RoundRectangle 16"
+                        StrokeThickness="0"
+                        Padding="16">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="📑 Duplicates" FontSize="14" FontAttributes="Bold" TextColor="#FB8C00" />
+                        <Label Text="{Binding DuplicateFilesCount, StringFormat='{0} copies'}" FontSize="20" FontAttributes="Bold" />
+                        <Label Text="{Binding DuplicateBytes, Converter={StaticResource BytesToReadable}, StringFormat='{0} space'}"
+                               FontSize="12" TextColor="Gray" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Junk & Cache Card -->
+                <Border Grid.Column="1"
+                        BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                        StrokeShape="RoundRectangle 16"
+                        StrokeThickness="0"
+                        Padding="16">
+                    <VerticalStackLayout Spacing="6">
+                        <Label Text="🗑️ Temp &amp; Cache" FontSize="14" FontAttributes="Bold" TextColor="#E53935" />
+                        <Label Text="{Binding JunkBytes, Converter={StaticResource BytesToReadable}}" FontSize="20" FontAttributes="Bold" />
+                        <Label Text="Safe to remove" FontSize="12" TextColor="Gray" />
+                    </VerticalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- One-Tap Clean Button -->
+            <Button Text="🚀 1-TAP CLEAN DEVICE"
+                    Command="{Binding OneTapCleanCommand}"
+                    BackgroundColor="#1E88E5"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    FontSize="18"
+                    HeightRequest="56"
+                    CornerRadius="16"
+                    IsEnabled="{Binding IsNotScanning}" />
+
+            <!-- Scan Button -->
+            <Button Text="🔍 Scan for Duplicates &amp; Junk"
+                    Command="{Binding QuickScanCommand}"
+                    BackgroundColor="{AppThemeBinding Light=#ECEFF1, Dark=#2C2C2C}"
+                    TextColor="{AppThemeBinding Light=#37474F, Dark=White}"
+                    FontAttributes="Bold"
+                    FontSize="15"
+                    HeightRequest="48"
+                    CornerRadius="14"
+                    IsEnabled="{Binding IsNotScanning}" />
+
+            <!-- Status Box -->
+            <Border BackgroundColor="{AppThemeBinding Light=#E8F5E9, Dark=#1B2E1E}"
+                    StrokeShape="RoundRectangle 12"
+                    StrokeThickness="0"
+                    Padding="14">
+                <HorizontalStackLayout Spacing="10">
+                    <Label Text="ℹ️" FontSize="16" VerticalOptions="Center" />
+                    <Label Text="{Binding StatusMessage}"
+                           FontSize="13"
+                           TextColor="{AppThemeBinding Light=#2E7D32, Dark=#81C784}"
+                           LineBreakMode="WordWrap"
+                           VerticalOptions="Center" />
+                </HorizontalStackLayout>
+            </Border>
+
+            <!-- Safety Guarantee Notice -->
+            <VerticalStackLayout Spacing="4" HorizontalOptions="Center" Margin="0,10,0,0">
+                <Label Text="🛡️ 100% Safe: Deletions go to Recycle Bin / Trash" FontSize="12" TextColor="Gray" HorizontalTextAlignment="Center" />
+                <Label Text="No internet connection required • No telemetry" FontSize="11" TextColor="Gray" HorizontalTextAlignment="Center" />
+            </VerticalStackLayout>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

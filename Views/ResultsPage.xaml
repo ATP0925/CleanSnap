@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:CleanSnap.ViewModels"
+             xmlns:models="clr-namespace:CleanSnap.Models"
+             xmlns:conv="clr-namespace:CleanSnap.Converters"
+             x:Class="CleanSnap.Views.ResultsPage"
+             x:DataType="vm:ResultsViewModel"
+             Title="Review &amp; Clean"
+             BackgroundColor="{AppThemeBinding Light=#F4F6F9, Dark=#121212}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <conv:BytesToReadableConverter x:Key="BytesToReadable" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <Grid RowDefinitions="Auto,*,Auto" Padding="16" RowSpacing="12">
+
+        <!-- Top Summary Bar -->
+        <Border Grid.Row="0" BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                StrokeShape="RoundRectangle 14" StrokeThickness="0" Padding="16">
+            <VerticalStackLayout Spacing="6">
+                <HorizontalStackLayout Spacing="8">
+                    <Label Text="📋 Review Items" FontSize="18" FontAttributes="Bold" />
+                    <Label Text="{Binding TotalReclaimableBytes, Converter={StaticResource BytesToReadable}, StringFormat='({0})'}"
+                           FontSize="18" FontAttributes="Bold" TextColor="#43A047" />
+                </HorizontalStackLayout>
+                <Label Text="{Binding ResultStatus}" FontSize="12" TextColor="Gray" LineBreakMode="WordWrap" />
+            </VerticalStackLayout>
+        </Border>
+
+        <!-- Main Items List -->
+        <ScrollView Grid.Row="1">
+            <VerticalStackLayout Spacing="16">
+
+                <!-- Junk Categories Section -->
+                <Label Text="JUNK &amp; TEMPORARY CACHES" FontSize="14" FontAttributes="Bold" TextColor="#1E88E5" Margin="4,0" />
+                <CollectionView ItemsSource="{Binding JunkCategories}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:JunkCategory">
+                            <Border Margin="0,4" BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                                    StrokeShape="RoundRectangle 12" StrokeThickness="0" Padding="12">
+                                <Grid ColumnDefinitions="Auto,*,Auto" ColumnSpacing="12">
+                                    <Label Grid.Column="0" Text="{Binding IconGlyph}" FontSize="24" VerticalOptions="Center" />
+                                    <VerticalStackLayout Grid.Column="1" VerticalOptions="Center">
+                                        <Label Text="{Binding Name}" FontAttributes="Bold" FontSize="14" />
+                                        <Label Text="{Binding Description}" FontSize="11" TextColor="Gray" LineBreakMode="WordWrap" />
+                                        <Label Text="{Binding SizeBytes, Converter={StaticResource BytesToReadable}, StringFormat='Size: {0}'}"
+                                               FontSize="11" TextColor="#43A047" FontAttributes="Bold" />
+                                    </VerticalStackLayout>
+                                    <CheckBox Grid.Column="2" IsChecked="{Binding IsSelected}" Color="#1E88E5" VerticalOptions="Center" />
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Duplicate Groups Section -->
+                <Label Text="IDENTICAL DUPLICATE FILES" FontSize="14" FontAttributes="Bold" TextColor="#FB8C00" Margin="4,8,4,0" />
+                <CollectionView ItemsSource="{Binding DuplicateGroups}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate x:DataType="models:DuplicateGroup">
+                            <Border Margin="0,6" BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                                    StrokeShape="RoundRectangle 12" StrokeThickness="0" Padding="14">
+                                <VerticalStackLayout Spacing="8">
+                                    <!-- Header with Original File -->
+                                    <HorizontalStackLayout Spacing="8">
+                                        <Label Text="{Binding IconGlyph}" FontSize="18" />
+                                        <Label Text="{Binding Original.FileName}" FontAttributes="Bold" FontSize="14" LineBreakMode="TailTruncation" />
+                                    </HorizontalStackLayout>
+
+                                    <!-- Keep Original Badge -->
+                                    <Border BackgroundColor="#E8F5E9" StrokeShape="RoundRectangle 6" Padding="8,4" HorizontalOptions="Start">
+                                        <Label Text="{Binding Original.FullPath, StringFormat='✅ KEEP ORIGINAL: {0}'}" FontSize="10" TextColor="#2E7D32" LineBreakMode="MiddleTruncation" />
+                                    </Border>
+
+                                    <!-- Duplicate Copies List -->
+                                    <Label Text="{Binding DuplicateCount, StringFormat='{0} redundant duplicate copy(s) found:'}" FontSize="11" TextColor="Gray" />
+                                    
+                                    <Label Text="{Binding ReclaimableBytes, Converter={StaticResource BytesToReadable}, StringFormat='Waste: {0}'}"
+                                           FontSize="12" FontAttributes="Bold" TextColor="#E53935" />
+                                </VerticalStackLayout>
+                            </Border>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+            </VerticalStackLayout>
+        </ScrollView>
+
+        <!-- Bottom Action Buttons -->
+        <Grid Grid.Row="2" ColumnDefinitions="*,*" ColumnSpacing="12">
+            <Button Grid.Column="0"
+                    Text="Clean Junk Caches"
+                    Command="{Binding CleanSelectedJunkCommand}"
+                    BackgroundColor="#1E88E5"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    FontSize="13"
+                    HeightRequest="48"
+                    CornerRadius="12" />
+
+            <Button Grid.Column="1"
+                    Text="Recycle Duplicates"
+                    Command="{Binding DeleteAllDuplicatesCommand}"
+                    BackgroundColor="#E53935"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    FontSize="13"
+                    HeightRequest="48"
+                    CornerRadius="12" />
+        </Grid>
+
+    </Grid>
+</ContentPage>
+

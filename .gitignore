@@ -1,0 +1,30 @@
+## .NET / C# standard ignores
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+.vs/
+*.user
+*.userprefs
+*.suo
+*.ide/
+
+## MAUI / Platform artifacts
+.packages/
+*.apk
+*.aab
+*.msix
+*.appx
+*.appxbundle
+*.msixbundle
+
+## Local SQLite Database
+*.db
+*.db3
+*.db-shm
+*.db-wal
+
+## OS files
+.DS_Store
+Thumbs.db
+desktop.ini

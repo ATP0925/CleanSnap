@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:CleanSnap.ViewModels"
+             xmlns:conv="clr-namespace:CleanSnap.Converters"
+             x:Class="CleanSnap.Views.ScanPage"
+             x:DataType="vm:ScanViewModel"
+             Title="Deep Scanner"
+             BackgroundColor="{AppThemeBinding Light=#F4F6F9, Dark=#121212}">
+
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <conv:BytesToReadableConverter x:Key="BytesToReadable" />
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="20" Padding="20">
+
+            <Label Text="🔍 Deep Duplicate Scanner" FontSize="22" FontAttributes="Bold" HorizontalOptions="Center" />
+            <Label Text="4-Stage Cryptographic SHA-256 Analysis Pipeline" FontSize="12" TextColor="Gray" HorizontalOptions="Center" />
+
+            <!-- Progress Card -->
+            <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                    StrokeShape="RoundRectangle 16"
+                    StrokeThickness="0"
+                    Padding="24">
+                <VerticalStackLayout Spacing="16">
+                    <Label Text="{Binding StageTitle}" FontSize="18" FontAttributes="Bold" TextColor="#1E88E5" HorizontalOptions="Center" />
+
+                    <!-- Live Progress Bar -->
+                    <ProgressBar Progress="{Binding Progress}" ProgressColor="#1E88E5" HeightRequest="14" />
+
+                    <Label Text="{Binding StatusText}" FontSize="13" TextColor="Gray" HorizontalOptions="Center" LineBreakMode="WordWrap" />
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Metrics Grid -->
+            <Grid ColumnDefinitions="*,*" RowDefinitions="Auto,Auto" RowSpacing="12" ColumnSpacing="12">
+                <!-- Files Processed -->
+                <Border Grid.Row="0" Grid.Column="0" BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                        StrokeShape="RoundRectangle 12" StrokeThickness="0" Padding="14">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Files Checked" FontSize="12" TextColor="Gray" />
+                        <Label Text="{Binding FilesProcessed}" FontSize="18" FontAttributes="Bold" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Duplicates Found -->
+                <Border Grid.Row="0" Grid.Column="1" BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                        StrokeShape="RoundRectangle 12" StrokeThickness="0" Padding="14">
+                    <VerticalStackLayout Spacing="4">
+                        <Label Text="Duplicates Found" FontSize="12" TextColor="Gray" />
+                        <Label Text="{Binding DuplicatesFound}" FontSize="18" FontAttributes="Bold" TextColor="#FB8C00" />
+                    </VerticalStackLayout>
+                </Border>
+
+                <!-- Total Space Reclaimable -->
+                <Border Grid.Row="1" Grid.ColumnSpan="2" BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                        StrokeShape="RoundRectangle 12" StrokeThickness="0" Padding="14">
+                    <HorizontalStackLayout Spacing="12">
+                        <Label Text="⚡" FontSize="24" VerticalOptions="Center" />
+                        <VerticalStackLayout>
+                            <Label Text="Recoverable Storage" FontSize="12" TextColor="Gray" />
+                            <Label Text="{Binding ReclaimableBytes, Converter={StaticResource BytesToReadable}}" FontSize="20" FontAttributes="Bold" TextColor="#43A047" />
+                        </VerticalStackLayout>
+                    </HorizontalStackLayout>
+                </Border>
+            </Grid>
+
+            <!-- Actions -->
+            <Button Text="START DEEP SCAN"
+                    Command="{Binding StartScanCommand}"
+                    BackgroundColor="#1E88E5"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    FontSize="16"
+                    HeightRequest="52"
+                    CornerRadius="14"
+                    IsEnabled="{Binding IsNotScanning}" />
+
+            <Button Text="CANCEL SCAN"
+                    Command="{Binding CancelScanCommand}"
+                    BackgroundColor="#EF5350"
+                    TextColor="White"
+                    FontAttributes="Bold"
+                    FontSize="14"
+                    HeightRequest="44"
+                    CornerRadius="12"
+                    IsVisible="{Binding IsScanning}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

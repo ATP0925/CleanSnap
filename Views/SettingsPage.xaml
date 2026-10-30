@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:vm="clr-namespace:CleanSnap.ViewModels"
+             xmlns:db="clr-namespace:CleanSnap.Database"
+             x:Class="CleanSnap.Views.SettingsPage"
+             x:DataType="vm:SettingsViewModel"
+             Title="Settings"
+             BackgroundColor="{AppThemeBinding Light=#F4F6F9, Dark=#121212}">
+
+    <ScrollView>
+        <VerticalStackLayout Spacing="16" Padding="20">
+
+            <Label Text="⚙️ Settings &amp; Data Backup" FontSize="22" FontAttributes="Bold" Margin="4,0" />
+
+            <!-- Safety Settings Card -->
+            <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                    StrokeShape="RoundRectangle 16" StrokeThickness="0" Padding="16">
+                <VerticalStackLayout Spacing="14">
+                    <Label Text="SAFETY &amp; DELETION" FontSize="12" FontAttributes="Bold" TextColor="Gray" />
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="Recycle Bin Protection" FontAttributes="Bold" FontSize="14" />
+                            <Label Text="Duplicates move to OS Recycle Bin/Trash, never permanently wiped" FontSize="11" TextColor="Gray" />
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="1" IsToggled="{Binding UseRecycleBin}" OnColor="#1E88E5" IsEnabled="False" />
+                    </Grid>
+
+                    <BoxView HeightRequest="1" Color="{AppThemeBinding Light=#E0E0E0, Dark=#333333}" />
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="100% Offline Mode" FontAttributes="Bold" FontSize="14" />
+                            <Label Text="Zero data leaves your device. No cloud sync, no tracking." FontSize="11" TextColor="Gray" />
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="1" IsToggled="{Binding OfflineOnly}" OnColor="#43A047" IsEnabled="False" />
+                    </Grid>
+
+                    <BoxView HeightRequest="1" Color="{AppThemeBinding Light=#E0E0E0, Dark=#333333}" />
+
+                    <Grid ColumnDefinitions="*,Auto">
+                        <VerticalStackLayout Grid.Column="0">
+                            <Label Text="Auto-Scan on Launch" FontAttributes="Bold" FontSize="14" />
+                            <Label Text="Check storage status automatically when opening app" FontSize="11" TextColor="Gray" />
+                        </VerticalStackLayout>
+                        <Switch Grid.Column="1" IsToggled="{Binding AutoScanOnLaunch}" OnColor="#1E88E5" />
+                    </Grid>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Database Backup & Cleanup History Card -->
+            <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                    StrokeShape="RoundRectangle 16" StrokeThickness="0" Padding="16">
+                <VerticalStackLayout Spacing="12">
+                    <HorizontalStackLayout Spacing="8">
+                        <Label Text="💾" FontSize="16" />
+                        <Label Text="CLEANUP &amp; BACKUP AUDIT LOG (SQLITE)" FontSize="12" FontAttributes="Bold" TextColor="Gray" VerticalOptions="Center" />
+                    </HorizontalStackLayout>
+
+                    <CollectionView ItemsSource="{Binding CleanupHistory}" EmptyView="No cleanup sessions recorded yet.">
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate x:DataType="db:CleanupHistoryRecord">
+                                <Border Margin="0,3" BackgroundColor="{AppThemeBinding Light=#F5F5F5, Dark=#2A2A2A}"
+                                        StrokeShape="RoundRectangle 8" StrokeThickness="0" Padding="10">
+                                    <Grid ColumnDefinitions="*,Auto">
+                                        <VerticalStackLayout Grid.Column="0" Spacing="2">
+                                            <Label Text="{Binding FormattedDate}" FontSize="11" TextColor="Gray" />
+                                            <Label Text="{Binding Details}" FontSize="12" FontAttributes="Bold" />
+                                        </VerticalStackLayout>
+                                        <Label Grid.Column="1" Text="{Binding ReadableFreed, StringFormat='+{0}'}"
+                                               FontSize="13" FontAttributes="Bold" TextColor="#43A047" VerticalOptions="Center" />
+                                    </Grid>
+                                </Border>
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
+                </VerticalStackLayout>
+            </Border>
+
+            <!-- Store & Compliance Card -->
+            <Border BackgroundColor="{AppThemeBinding Light=White, Dark=#1E1E1E}"
+                    StrokeShape="RoundRectangle 16" StrokeThickness="0" Padding="16">
+                <VerticalStackLayout Spacing="12">
+                    <Label Text="APP INFO &amp; COMPLIANCE" FontSize="12" FontAttributes="Bold" TextColor="Gray" />
+
+                    <Label Text="{Binding AppVersion}" FontAttributes="Bold" FontSize="14" />
+                    <Label Text="Ready for Google Play Store (Android) &amp; Microsoft Store (Windows)" FontSize="12" TextColor="Gray" />
+
+                    <Button Text="📄 View Privacy Policy"
+                            Command="{Binding OpenPrivacyPolicyCommand}"
+                            BackgroundColor="{AppThemeBinding Light=#ECEFF1, Dark=#2A2A2A}"
+                            TextColor="{AppThemeBinding Light=#37474F, Dark=White}"
+                            FontSize="12"
+                            HeightRequest="40"
+                            CornerRadius="10" />
+                </VerticalStackLayout>
+            </Border>
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
